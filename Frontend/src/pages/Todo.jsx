@@ -1,5 +1,7 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
+import logo from "../assets/TaskManager.png";
+
 
 function Todo() {
   const [tasks, setTasks] = useState([]);
@@ -46,7 +48,7 @@ function Todo() {
           <div className="container">
             <div className="container">
               <div className="container">
-                <h3 className="text-center">Your Personal Task Manager</h3>
+                <h3 className="text-center">Your Personal <img src={logo} width={150}/></h3>
               </div>
             </div>
           </div>

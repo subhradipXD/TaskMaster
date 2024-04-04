@@ -1,11 +1,12 @@
 import { NavLink } from "react-router-dom";
+import logo from "../assets/TaskManager.png";
 function Navbar() {
   return (
     <>
       <nav className="navbar navbar-expand-lg sticky-top bg-body-tertiary">
         <div className="container-fluid">
           <NavLink className="navbar-brand" to="#">
-            TaskMaster
+            <img src={logo} width={110}/>
           </NavLink>
           <button
             className="navbar-toggler"

@@ -2,15 +2,40 @@ import { useState } from "react";
 import Navbar from "../components/Navbar";
 
 function Todo() {
-  const [title, setTitle] = useState([]);
-  const [description, setDescription] = useState([]);
+  const [tasks, setTasks] = useState([]);
+  const [editIndex, setEditIndex] = useState(null);
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    setTitle([...title, event.target.title.value]);
-    setDescription([...description, event.target.description.value]);
+    const newTask = {
+      title: event.target.title.value,
+      description: event.target.description.value
+    };
+    if (editIndex !== null) {
+      const updatedTasks = [...tasks];
+      updatedTasks[editIndex] = newTask;
+      setTasks(updatedTasks);
+      setEditIndex(null);
+    } else {
+      setTasks([...tasks, newTask]);
+    }
     event.target.title.value = "";
     event.target.description.value = "";
+  };
+
+  const handleEdit = (index) => {
+    setEditIndex(index);
+    const taskToEdit = tasks[index];
+    document.getElementById("exampleFormControlInput1").value =
+      taskToEdit.title;
+    document.getElementById("exampleFormControlTextarea1").value =
+      taskToEdit.description;
+  };
+
+  const handleDelete = (index) => {
+    const updatedTasks = [...tasks];
+    updatedTasks.splice(index, 1);
+    setTasks(updatedTasks);
   };
 
   return (
@@ -63,7 +88,7 @@ function Todo() {
                     ></textarea>
                   </div>
                   <button type="submit" className="btn btn-primary">
-                    Submit
+                    {editIndex !== null ? "Update" : "Submit"}
                   </button>
                 </form>
               </div>
@@ -81,11 +106,24 @@ function Todo() {
                   <strong>To-Dos</strong>
                 </h5>
                 <ul>
-                  {title.map((item, index) => (
+                  {tasks.map((task, index) => (
                     <li key={index}>
-                      <strong>Title:</strong> {item}
+                      <strong>Title:</strong> {task.title}
                       <br />
-                      <strong>Description:</strong> {description[index]}
+                      <strong>Description:</strong> {task.description}
+                      <br />
+                      <button
+                        className="btn btn-secondary"
+                        onClick={() => handleEdit(index)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="btn btn-danger mx-2"
+                        onClick={() => handleDelete(index)}
+                      >
+                        Delete
+                      </button>
                     </li>
                   ))}
                 </ul>

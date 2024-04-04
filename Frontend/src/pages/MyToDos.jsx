@@ -4,7 +4,7 @@ function MyToDos(props) {
     return ( 
         <>
         <Navbar/>
-        <div className="container my-5">
+        {/* <div className="container my-5">
         <div className="container">
           <div className="container">
             <div className="container">
@@ -25,7 +25,7 @@ function MyToDos(props) {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
         </>
      );
 }

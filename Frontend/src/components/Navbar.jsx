@@ -1,12 +1,16 @@
-import { NavLink } from "react-router-dom";
+import {Link, NavLink } from "react-router-dom";
 import logo from "../assets/TaskManager.png";
+import { LiaSignInAltSolid } from "react-icons/lia";
+import { LiaSignOutAltSolid } from "react-icons/lia";
+import { useState } from "react";
 function Navbar() {
+  const [login, setLogin] = useState(false);
   return (
     <>
       <nav className="navbar navbar-expand-lg sticky-top bg-body-tertiary">
         <div className="container-fluid">
           <NavLink className="navbar-brand" to="#">
-            <img src={logo} width={110}/>
+            <img src={logo} width={110} />
           </NavLink>
           <button
             className="navbar-toggler"
@@ -23,7 +27,7 @@ function Navbar() {
             <ul className="navbar-nav ms-auto nav-underline">
               <li className="nav-item dropdown">
                 <a
-                  className="nav-link dropdown-toggle"
+                  className="nav-link dropdown-toggle mt-2"
                   to="#"
                   role="button"
                   data-bs-toggle="dropdown"
@@ -44,25 +48,54 @@ function Navbar() {
                 </ul>
               </li>
               <li className="nav-item">
-                <NavLink className="nav-link" aria-current="page" to="/">
+                <NavLink className="nav-link mt-2" aria-current="page" to="/">
                   To-Do
                 </NavLink>
               </li>
               <li className="nav-item">
-                <NavLink className="nav-link" to="/my-todos">
+                <NavLink className="nav-link mt-2" to="/my-todos">
                   My-ToDos
                 </NavLink>
               </li>
               <li className="nav-item">
-                <NavLink className="nav-link" to="/completed">
+                <NavLink className="nav-link mt-2" to="/completed">
                   Completed
                 </NavLink>
               </li>
               <li className="nav-item">
-                <NavLink className="nav-link" to="/deleted">
+                <NavLink className="nav-link mt-2" to="/deleted">
                   Deleted
                 </NavLink>
               </li>
+              {login ? (
+                <li className="nav-item">
+                  <button
+                    className="btn"
+                    onClick={() => {
+                      setLogin(!login);
+                    }}
+                  >
+                    <Link className="nav-link" to="/">
+                      <small>LogOut</small>
+                      <LiaSignOutAltSolid />
+                    </Link>
+                  </button>
+                </li>
+              ) : (
+                <li className="nav-item">
+                  <button
+                    className="btn"
+                    onClick={() => {
+                      setLogin(!login);
+                    }}
+                  >
+                    <Link className="nav-link" to="/login">
+                      <small>LogIn</small>
+                      <LiaSignInAltSolid />
+                    </Link>
+                  </button>
+                </li>
+              )}
             </ul>
           </div>
         </div>

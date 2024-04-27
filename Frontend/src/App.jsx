@@ -1,4 +1,3 @@
-import MyToDos from "./pages/MyToDos";
 import Todo from "./pages/Todo";
 import Deleted from "./pages/Deleted";
 import Completed from "./pages/Completed";
@@ -13,7 +12,6 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Todo />}></Route>
-          <Route path="/my-todos" element={<MyToDos />}></Route>
           <Route path="/deleted" element={<Deleted />}></Route>
           <Route path="/completed" element={<Completed />}></Route>
           <Route path="/login" element={< Login />}></Route>

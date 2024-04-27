@@ -1,42 +1,88 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import logo from "../assets/TaskManager.png";
+import { AiTwotoneDelete } from "react-icons/ai";
+// import { CiEdit } from "react-icons/ci";
+import { FaRegEdit } from "react-icons/fa";
+
+import axios from "axios";
+
+const baseURL = "http://localhost:4000";
 
 function Todo() {
-  const [tasks, setTasks] = useState([]);
-  const [editIndex, setEditIndex] = useState(null);
+  const getAllToDos = (setTodo) => {
+    axios.get(baseURL).then(({ data }) => {
+      console.log(data);
+      setTodo(data);
+    });
+  };
 
-  const handleFormSubmit = (event) => {
+  const [toDo, setToDos] = useState([]);
+
+  useEffect(() => {
+    getAllToDos(setToDos);
+  }, []);
+
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+
+  const handleFormSubmit = async (event) => {
     event.preventDefault();
-    const newTask = {
-      title: event.target.title.value,
-      description: event.target.description.value,
-    };
-    if (editIndex !== null) {
-      const updatedTasks = [...tasks];
-      updatedTasks[editIndex] = newTask;
-      setTasks(updatedTasks);
-      setEditIndex(null);
+
+    if (isEditing) {
+      handleEdit(editId);
     } else {
-      setTasks([...tasks, newTask]);
+      try {
+        const addToDosRes = await axios.post(`${baseURL}/save`, {
+          title,
+          description,
+        });
+        setTitle("");
+        setDescription("");
+        console.log(addToDosRes);
+      } catch (err) {
+        console.log(err);
+      }
     }
-    event.target.title.value = "";
-    event.target.description.value = "";
   };
 
-  const handleEdit = (index) => {
-    setEditIndex(index);
-    const taskToEdit = tasks[index];
-    document.getElementById("exampleFormControlInput1").value =
-      taskToEdit.title;
-    document.getElementById("exampleFormControlTextarea1").value =
-      taskToEdit.description;
+  const handleEdit = async (id) => {
+    try {
+      const editedToDo = await axios.post(`${baseURL}/update`, {
+        _id: id,
+        title,
+        description,
+      });
+
+      console.log("ToDo updated successfully:", editedToDo);
+
+      setTitle("");
+      setDescription("");
+      setIsEditing(false);
+      setEditId(null);
+    } catch (err) {
+      console.error("Error updating ToDo:", err);
+    }
   };
 
-  const handleDelete = (index) => {
-    const updatedTasks = [...tasks];
-    updatedTasks.splice(index, 1);
-    setTasks(updatedTasks);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editId, setEditId] = useState(null);
+
+  const handleEditClick = (id, title, description) => {
+    setEditId(id);
+    setTitle(title);
+    setDescription(description);
+    setIsEditing(true);
+  };
+
+  const handleDelete = async (_id) => {
+    try {
+      const deletedToDo = await axios.post(`${baseURL}/delete`, { _id });
+
+      console.log("ToDo deleted successfully:", deletedToDo);
+    } catch (err) {
+      console.error("Error deleting ToDo:", err);
+    }
   };
 
   return (
@@ -74,6 +120,10 @@ function Todo() {
                       id="exampleFormControlInput1"
                       name="title"
                       placeholder="Title..."
+                      value={title}
+                      onChange={(e) => {
+                        setTitle(e.target.value);
+                      }}
                     />
                   </div>
                   <div className="mb-3">
@@ -88,10 +138,14 @@ function Todo() {
                       id="exampleFormControlTextarea1"
                       rows="3"
                       name="description"
+                      value={description}
+                      onChange={(e) => {
+                        setDescription(e.target.value);
+                      }}
                     ></textarea>
                   </div>
                   <button type="submit" className="btn btn-primary">
-                    {editIndex !== null ? "Update" : "Submit"}
+                    {isEditing ? "Update ToDo" : "Add ToDo"}
                   </button>
                 </form>
               </div>
@@ -109,24 +163,33 @@ function Todo() {
                   <strong>To-Dos</strong>
                 </h5>
                 <ul>
-                  {tasks.map((task, index) => (
-                    <li key={index}>
-                      <strong>Title:</strong> {task.title}
+                  {toDo.map((item) => (
+                    <li key={item._id}>
+                      <strong>Title:</strong> {item.title}
                       <br />
-                      <strong>Description:</strong> {task.description}
+                      <strong>Description:</strong> {item.description}
                       <br />
-                      <button
-                        className="btn btn-secondary"
-                        onClick={() => handleEdit(index)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="btn btn-danger mx-2"
-                        onClick={() => handleDelete(index)}
-                      >
-                        Delete
-                      </button>
+                      <div className="my-2">
+                        <button
+                          className="btn btn-secondary"
+                          onClick={() =>
+                            handleEditClick(
+                              item._id,
+                              item.title,
+                              item.description
+                            )
+                          }
+                        >
+                          {/* <CiEdit /> */}
+                          <FaRegEdit />
+                        </button>
+                        <button
+                          className="btn btn-danger mx-2"
+                          onClick={() => handleDelete(item._id)}
+                        >
+                          <AiTwotoneDelete />
+                        </button>
+                      </div>
                     </li>
                   ))}
                 </ul>

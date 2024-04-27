@@ -53,11 +53,6 @@ function Navbar() {
                 </NavLink>
               </li>
               <li className="nav-item">
-                <NavLink className="nav-link mt-2" to="/my-todos">
-                  My-ToDos
-                </NavLink>
-              </li>
-              <li className="nav-item">
                 <NavLink className="nav-link mt-2" to="/completed">
                   Completed
                 </NavLink>

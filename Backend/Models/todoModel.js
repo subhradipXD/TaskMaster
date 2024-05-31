@@ -5,5 +5,4 @@ const todoModel = new mongoose.Schema({
   description: { type: String, require: true },
 });
 
-
-module.exports = mongoose.model('TODO', todoModel);
+module.exports = mongoose.model("TODO", todoModel);

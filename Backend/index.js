@@ -5,6 +5,7 @@ const cors = require("cors");
 require("dotenv").config();
 
 const todoRoute = require("./Routers/todoRoute");
+const userRoute = require("./Routers/userRoute");
 
 const app = express();
 app.use(cors());
@@ -20,12 +21,13 @@ mongoose
   });
 
 app.use("/", todoRoute);
+app.use("/user", userRoute);
 
 app.get("/", (req, res) => {
   res.send("Route is working for TaskMaster!");
 });
 
-const PORT = process.env.port || 4000;
+const PORT = process.env.port;
 app.listen(PORT, () => {
   console.log(`listening on ${PORT}`);
 });

@@ -40,6 +40,8 @@ function Todo() {
         setTitle("");
         setDescription("");
         console.log(addToDosRes);
+
+        getAllToDos(setToDos);
       } catch (err) {
         console.log(err);
       }
@@ -60,6 +62,8 @@ function Todo() {
       setDescription("");
       setIsEditing(false);
       setEditId(null);
+
+      getAllToDos(setToDos);
     } catch (err) {
       console.error("Error updating ToDo:", err);
     }
@@ -80,6 +84,8 @@ function Todo() {
       const deletedToDo = await axios.post(`${baseURL}/delete`, { _id });
 
       console.log("ToDo deleted successfully:", deletedToDo);
+
+      getAllToDos(setToDos);
     } catch (err) {
       console.error("Error deleting ToDo:", err);
     }

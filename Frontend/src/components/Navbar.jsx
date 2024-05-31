@@ -1,10 +1,18 @@
-import {Link, NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import logo from "../assets/TaskManager.png";
 import { LiaSignInAltSolid } from "react-icons/lia";
 import { LiaSignOutAltSolid } from "react-icons/lia";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useCookies } from "react-cookie";
+
 function Navbar() {
+  const [cookies, setCookies, removeCookie] = useCookies(["token"]);
   const [login, setLogin] = useState(false);
+
+  useEffect(() => {
+    setLogin(!!cookies.token); // Set login state based on the presence of the token cookie
+  }, [cookies.token]);
+
   return (
     <>
       <nav className="navbar navbar-expand-lg sticky-top bg-body-tertiary">
@@ -62,12 +70,13 @@ function Navbar() {
                   Deleted
                 </NavLink>
               </li>
-              {login ? (
+              {cookies.token ? (
                 <li className="nav-item">
                   <button
                     className="btn"
                     onClick={() => {
-                      setLogin(!login);
+                      removeCookie("token");
+                      setLogin(false);
                     }}
                   >
                     <Link className="nav-link" to="/">
@@ -78,12 +87,7 @@ function Navbar() {
                 </li>
               ) : (
                 <li className="nav-item">
-                  <button
-                    className="btn"
-                    onClick={() => {
-                      setLogin(!login);
-                    }}
-                  >
+                  <button className="btn">
                     <Link className="nav-link" to="/login">
                       <small>LogIn</small>
                       <LiaSignInAltSolid />

@@ -1,23 +1,34 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import Navbar from "../components/Navbar";
 import logo from "../assets/TaskManager.png";
 import { AiTwotoneDelete } from "react-icons/ai";
 // import { CiEdit } from "react-icons/ci";
 import { FaRegEdit } from "react-icons/fa";
+import { UserContext } from "../context/userContextProvider";
 
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const baseURL = "http://localhost:4000";
 
 function Todo() {
+  const navigate = useNavigate();
+  const [toDo, setToDos] = useState([]);
+
+  const { user, cookies } = useContext(UserContext);
+
+  console.log(user);
+  console.log(cookies.token);
+  if (!cookies.token) {
+    navigate("/login");
+  }
   const getAllToDos = (setTodo) => {
-    axios.get(baseURL).then(({ data }) => {
+    console.log(user);
+    axios.get(`${baseURL}/${cookies.token}`).then(({ data }) => {
       console.log(data);
       setTodo(data);
     });
   };
-
-  const [toDo, setToDos] = useState([]);
 
   useEffect(() => {
     getAllToDos(setToDos);
@@ -34,6 +45,7 @@ function Todo() {
     } else {
       try {
         const addToDosRes = await axios.post(`${baseURL}/save`, {
+          user,
           title,
           description,
         });

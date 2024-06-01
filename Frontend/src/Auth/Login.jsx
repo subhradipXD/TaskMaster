@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { useCookies } from "react-cookie";
+import { useState, useContext } from "react";
 import axios from "axios";
+import { UserContext } from "../context/userContextProvider";
 
 const baseURL = "http://localhost:4000";
 
@@ -9,8 +9,7 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const [_, setCookies] = useCookies(["token"]);
-
+  const { setCookies } = useContext(UserContext);
   const handelSubmit = async (event) => {
     event.preventDefault();
 

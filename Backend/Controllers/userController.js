@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const userModel = require("../Models/userModel");
+const todoModel = require("../Models/todoModel");
 
 module.exports.register = async (req, res) => {
   try {
@@ -46,6 +47,28 @@ module.exports.login = async (req, res) => {
       response: {
         user: user,
         token: token,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports.getUser = async (req, res) => {
+  try {
+    const hashID = req.params.userID;
+    // console.log("in getUser");
+    // console.log(hashID);
+    var decoded = jwt.verify(hashID, process.env.HashID);
+    // console.log(decoded);
+    const user = decoded.id;
+    const UserTodos = await todoModel.find({ user });
+
+    res.status(200).json({
+      error: false,
+      response: {
+        user,
+        UserTodos,
       },
     });
   } catch (error) {

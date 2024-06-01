@@ -1,14 +1,24 @@
 const todoModel = require("../Models/todoModel");
-
+const jwt = require("jsonwebtoken");
 module.exports.getAllToDos = async (req, res) => {
-  const allToDos = await todoModel.find();
+  const hashID = req.params.userID;
+  var decoded = jwt.verify(hashID, process.env.HashID);
+  console.log("decod", decoded);
+  const userID = decoded.id;
+  console.log(userID);
+  console.log("in getall todos", userID);
+  const allToDos = await todoModel.find({ userId: userID });
+  console.log(allToDos);
   res.send(allToDos);
 };
 
 module.exports.saveToDos = async (req, res) => {
   try {
-    const { title, description } = req.body;
+    const { user, title, description } = req.body;
+    console.log(user);
+    const userId = user;
     const newToDo = new todoModel({
+      userId,
       title,
       description,
     });

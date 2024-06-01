@@ -2,16 +2,13 @@ import { Link, NavLink } from "react-router-dom";
 import logo from "../assets/TaskManager.png";
 import { LiaSignInAltSolid } from "react-icons/lia";
 import { LiaSignOutAltSolid } from "react-icons/lia";
-import { useState, useEffect } from "react";
+import { useContext } from "react";
 import { useCookies } from "react-cookie";
+import { UserContext } from "../context/userContextProvider";
 
 function Navbar() {
-  const [cookies, setCookies, removeCookie] = useCookies(["token"]);
-  const [login, setLogin] = useState(false);
-
-  useEffect(() => {
-    setLogin(!!cookies.token); // Set login state based on the presence of the token cookie
-  }, [cookies.token]);
+  // const [cookies, setCookies, removeCookie] = useCookies(["token"]);
+  const { cookies, removeCookie } = useContext(UserContext);
 
   return (
     <>
@@ -75,11 +72,11 @@ function Navbar() {
                   <button
                     className="btn"
                     onClick={() => {
+                      removeCookie(cookies.token);
                       removeCookie("token");
-                      setLogin(false);
                     }}
                   >
-                    <Link className="nav-link" to="/">
+                    <Link className="nav-link" to="/login">
                       <small>LogOut</small>
                       <LiaSignOutAltSolid />
                     </Link>
